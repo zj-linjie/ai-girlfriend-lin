@@ -3,43 +3,54 @@
 > 本文件是**脱敏样例**,所有值均为占位符。真实 Key 只填在 AIRI 设置界面中,不入仓库。
 > 入口:Controls Island → Open settings → Providers 页。
 
-## Chat(对话 LLM)
+## 实际采用的链路(2026-09-20)
 
-采用 DeepSeek 作为默认链路:
+| 类别 | Provider | 端点/模型 | 状态 |
+| --- | --- | --- | --- |
+| Chat(LLM) | OpenAI Compatible → Agnes 聚合 | `https://<your-aggregator>/v1` + Key | ✅ 已配通,打字聊天正常 |
+| Vision | 同 Agnes | 同上 | ✅ 已配置 |
+| Transcription(STT) | OpenAI Compatible → SiliconFlow | `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/SenseVoiceSmall` | ⏳ 待配置(见下) |
+| Speech(TTS) | OpenAI Compatible → SiliconFlow | `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/CosyVoice2-0.5B` | ⏳ 待配置(见下) |
+| Artistry(画图) | — | — | ⛔ 阶段 A 跳过,与语音对话无关 |
+
+## Chat(对话 LLM)
 
 | 字段 | 值(样例) |
 | --- | --- |
-| Provider | `DeepSeek` |
+| Provider | `OpenAI Compatible` |
+| Base URL | `https://<your-aggregator>/v1` |
 | API Key | `sk-xxxxxxxxxxxxxxxxxxxxxxxx`(真实 Key 只存本地) |
-| Base URL | `https://api.deepseek.com`(默认,无需改) |
-| Model | `deepseek-chat` |
-
-备选:OpenRouter(聚合多模型)、OpenAI Compatible(任意兼容端点)。
-
-```text
-# OpenRouter 样例
-Provider: OpenRouter
-API Key:  sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxx
-Model:    openai/gpt-4o-mini   # 示意,任选价格透明的小模型即可
-```
+| Model | 任选价格透明的对话模型 |
 
 ## Transcription(语音识别)
 
+**踩坑记录**(2026-09-20 实测):
+- AIRI 桌面版首次配置后,Transcription 默认挂在 **AIRI 官方通道(official-provider-transcription)** 上,未配置可用云端 STT,语音输入报 "failed to transcribe";需手动切换。
+- 桌面版(Electron)里 `browser-web-speech-api`(浏览器语音识别)不可用,不要选。
+- Agnes 聚合端点**不支持音频转写**(`/v1/audio/transcriptions` 返回 503 no channel),不能复用 Chat 的 Key。
+
+**配置方法**(推荐 SiliconFlow,国内直连、SenseVoiceSmall 免费额度、已实测可达 0.46s):
+
 | 字段 | 值(样例) |
 | --- | --- |
-| Provider | 以 AIRI 设置页 Transcription 分类实际列出的云端支持项为准 |
-| API Key | `<占位符,真实 Key 只存本地>` |
-| Language | `zh-CN`(按实际对话语言) |
+| Provider | Transcription 页的 `OpenAI Compatible`(音频转写) |
+| Base URL | `https://api.siliconflow.cn/v1/` |
+| API Key | `<SiliconFlow 的 Key,真实 Key 只存本地>` |
+| Model | `FunAudioLLM/SenseVoiceSmall` |
 
-兜底:AIRI 内置浏览器级识别(Web Speech API)不需要 Key,可作对照,但精度与稳定性以云端为准。
+备选:Groq 的 `whisper-large-v3`(免费额度,已实测可达 0.8s,Base URL `https://api.groq.com/openai/v1/`)。
 
 ## Speech(语音合成)
 
 | 字段 | 值(样例) |
 | --- | --- |
-| Provider | 以 AIRI 设置页 Speech 分类实际列出的云端支持项为准 |
-| API Key / Region | `<占位符,真实 Key 只存本地>` |
-| Voice | 任选一个中文女声/角色声线(以试听效果定) |
+| Provider | Speech 页的 `OpenAI Compatible`(音频合成) |
+| Base URL | `https://api.siliconflow.cn/v1/` |
+| API Key | `<SiliconFlow 的 Key,同一把>` |
+| Model | `FunAudioLLM/CosyVoice2-0.5B` |
+| Voice | `FunAudioLLM/CosyVoice2-0.5B:alex`(试听后自选中文音色) |
+
+> 配置前 AIRI 的 Speech 处于 `speech-noop`(空占位,永远不出声)——不配 TTS,修好识别她也"不会说话"。
 
 ## Modules(模块开关)
 
