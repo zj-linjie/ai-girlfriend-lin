@@ -8,9 +8,9 @@
 | 项目 | 值 |
 | --- | --- |
 | AIRI 版本 | 0.11.3(brew cask) |
-| LLM | ____ |
-| Transcription(STT) | ____ |
-| Speech(TTS) | ____ |
+| LLM | Agnes 聚合(OpenAI Compatible) |
+| Transcription(STT) | SiliconFlow `FunAudioLLM/SenseVoiceSmall`(识别测试通过) |
+| Speech(TTS) | SiliconFlow `FunAudioLLM/CosyVoice2-0.5B`(测试语音通过;音色:____) |
 | 音频设备 | 内置扬声器 / ____ 耳机 |
 | 网络类型 | ____ |
 

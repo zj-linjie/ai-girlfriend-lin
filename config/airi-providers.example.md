@@ -9,8 +9,8 @@
 | --- | --- | --- | --- |
 | Chat(LLM) | OpenAI Compatible → Agnes 聚合 | `https://<your-aggregator>/v1` + Key | ✅ 已配通,打字聊天正常 |
 | Vision | 同 Agnes | 同上 | ✅ 已配置 |
-| Transcription(STT) | OpenAI Compatible → SiliconFlow | `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/SenseVoiceSmall` | ⏳ 待配置(见下) |
-| Speech(TTS) | **Volcengine(火山引擎/豆包音色)** | 火山"语音技术"应用 App ID + API Key | ⏳ 待配置(见下) |
+| Transcription(STT) | OpenAI Compatible → SiliconFlow | `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/SenseVoiceSmall` | ✅ 已配通,识别测试通过(2026-09-20) |
+| Speech(TTS) | OpenAI Compatible → SiliconFlow | `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/CosyVoice2-0.5B` | ✅ 已配通,测试语音通过(2026-09-20) |
 | Artistry(画图) | — | — | ⛔ 阶段 A 跳过,与语音对话无关 |
 
 ## Chat(对话 LLM)
