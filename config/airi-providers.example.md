@@ -10,7 +10,7 @@
 | Chat(LLM) | OpenAI Compatible → Agnes 聚合 | `https://<your-aggregator>/v1` + Key | ✅ 已配通,打字聊天正常 |
 | Vision | 同 Agnes | 同上 | ✅ 已配置 |
 | Transcription(STT) | OpenAI Compatible → SiliconFlow | `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/SenseVoiceSmall` | ⏳ 待配置(见下) |
-| Speech(TTS) | OpenAI Compatible → SiliconFlow | `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/CosyVoice2-0.5B` | ⏳ 待配置(见下) |
+| Speech(TTS) | **Volcengine(火山引擎/豆包音色)** | 火山"语音技术"应用 App ID + API Key | ⏳ 待配置(见下) |
 | Artistry(画图) | — | — | ⛔ 阶段 A 跳过,与语音对话无关 |
 
 ## Chat(对话 LLM)
@@ -42,15 +42,19 @@
 
 ## Speech(语音合成)
 
-| 字段 | 值(样例) |
-| --- | --- |
-| Provider | Speech 页的 `OpenAI Compatible`(音频合成) |
-| Base URL | `https://api.siliconflow.cn/v1/` |
-| API Key | `<SiliconFlow 的 Key,同一把>` |
-| Model | `FunAudioLLM/CosyVoice2-0.5B` |
-| Voice | `FunAudioLLM/CosyVoice2-0.5B:alex`(试听后自选中文音色) |
+**采用:火山引擎豆包 TTS**(AIRI 原生支持,中文音色自然度高;识别与合成用不同供应商完全可行):
 
-> 配置前 AIRI 的 Speech 处于 `speech-noop`(空占位,永远不出声)——不配 TTS,修好识别她也"不会说话"。
+1. 登录[火山引擎控制台](https://console.volcengine.com/),进入**语音技术**,创建语音应用(需实名;合成音色有免费试用额度),确认应用已**开通语音合成**服务。
+2. AIRI 设置 → 服务商 → 语音合成(Speech)→ **Volcengine**,填同一应用下的 **App ID + API Key**(两者必须来自同一应用,否则验证失败)。
+3. 点 **Ping API** 验证连通;成功后选择豆包音色(默认 `BV001_streaming`,可试听更换中文音色)。
+4. 到 设置 → 发声 启用该 TTS。
+
+> AIRI 桌面版不配 TTS 时 Speech 处于 `speech-noop`(空占位,永远不出声)。
+
+**备选**:SiliconFlow CosyVoice2(一个 Key 连 STT+TTS,省事):
+Provider 选 Speech 页的 OpenAI Compatible,Base URL `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/CosyVoice2-0.5B`,音色 `FunAudioLLM/CosyVoice2-0.5B:alex`。
+
+**关于豆包识别(ASR)的踩坑结论**(2026-09-20 查证):AIRI 0.11.3 的 Transcription 分类**没有火山条目**,且火山方舟的语音识别只有自有 WebSocket/HTTP 接口、无官方 OpenAI 兼容 `/v1/audio/transcriptions` 端点——所以**豆包识别接不进 AIRI,识别侧用 SiliconFlow SenseVoice**(上面 Transcription 一节),不必再找。
 
 ## Modules(模块开关)
 
