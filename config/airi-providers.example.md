@@ -42,19 +42,33 @@
 
 ## Speech(语音合成)
 
-**采用:火山引擎豆包 TTS**(AIRI 原生支持,中文音色自然度高;识别与合成用不同供应商完全可行):
+### ⚠️ 踩坑:AIRI 原生"火山引擎"卡片不可用(2026-09-20 实测)
 
-1. 登录[火山引擎控制台](https://console.volcengine.com/),进入**语音技术**,创建语音应用(需实名;合成音色有免费试用额度),确认应用已**开通语音合成**服务。
-2. AIRI 设置 → 服务商 → 语音合成(Speech)→ **Volcengine**,填同一应用下的 **App ID + API Key**(两者必须来自同一应用,否则验证失败)。
-3. 点 **Ping API** 验证连通;成功后选择豆包音色(默认 `BV001_streaming`,可试听更换中文音色)。
-4. 到 设置 → 发声 启用该 TTS。
+AIRI 的 Volcengine TTS 默认把凭据发往第三方中转 `unspeech.hyp3r.link`(unspeech 协议),该实例带私有 SaaS 层,只认它自己登记的凭据("grant");填入火山原始凭据会报:
+`Remote sent 401 response ... UPSTREAM_ERROR: load grant: requested grant not found in SaaS storage`。
+**不要在该卡片上继续排查**;页面里出现 ElevenLabs 的测试文案/声线名(如 "Charlie")只是 UI 模板默认值,可忽略。
 
-> AIRI 桌面版不配 TTS 时 Speech 处于 `speech-noop`(空占位,永远不出声)。
+### 方案一(采用):OpenAI Compatible 直连火山方舟(豆包 TTS)
 
-**备选**:SiliconFlow CosyVoice2(一个 Key 连 STT+TTS,省事):
-Provider 选 Speech 页的 OpenAI Compatible,Base URL `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/CosyVoice2-0.5B`,音色 `FunAudioLLM/CosyVoice2-0.5B:alex`。
+已实测方舟存在 OpenAI 兼容端点 `/api/v3/audio/speech`(探测返回 401 路由有效,直连、不经过中转):
 
-**关于豆包识别(ASR)的踩坑结论**(2026-09-20 查证):AIRI 0.11.3 的 Transcription 分类**没有火山条目**,且火山方舟的语音识别只有自有 WebSocket/HTTP 接口、无官方 OpenAI 兼容 `/v1/audio/transcriptions` 端点——所以**豆包识别接不进 AIRI,识别侧用 SiliconFlow SenseVoice**(上面 Transcription 一节),不必再找。
+| 字段 | 值(样例) |
+| --- | --- |
+| Provider | Speech 页的 `OpenAI Compatible`(音频合成) |
+| Base URL | `https://ark.cn-beijing.volces.com/api/v3/`(结尾必须带 `/`) |
+| API Key | `<火山方舟 API Key>`(方舟控制台创建;与"语音技术"应用的 App ID/Token 是两套体系,用方舟的) |
+| Model | `doubao-seed-tts`(以方舟控制台「开通管理」显示的模型 ID 为准,如 `doubao-seed-tts-2.0`) |
+| Voice | 豆包音色 ID,如 `zh_female_cancan_schoolgirl` |
+
+前提:注册火山方舟 + 实名 → 创建 API Key → 在「开通管理」开通 doubao-seed-tts 模型。若测试报 model not found,按控制台显示的 ID 改模型名即可。
+
+### 方案二(保底):SiliconFlow CosyVoice2
+
+Provider 选 Speech 页 OpenAI Compatible,Base URL `https://api.siliconflow.cn/v1/`,模型 `FunAudioLLM/CosyVoice2-0.5B`,音色 `FunAudioLLM/CosyVoice2-0.5B:alex`。
+
+> 不配 TTS 时 AIRI 的 Speech 处于 `speech-noop`(空占位,永远不出声)。
+
+**豆包识别(ASR)修正结论**(2026-09-20 实测更新):方舟同样存在 OpenAI 兼容端点 `/api/v3/audio/transcriptions`(探测 401 路由有效)。即:拿同一把方舟 Key,在 Transcription 页选 OpenAI Compatible、同 Base URL、模型填方舟的豆包识别模型 ID(以控制台为准)——**理论上全豆包链路可行,识别模型 ID 待真 Key 验证**;若报模型不存在,Transcription 回退 SiliconFlow `FunAudioLLM/SenseVoiceSmall`。
 
 ## Modules(模块开关)
 
