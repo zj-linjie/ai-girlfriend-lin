@@ -60,7 +60,7 @@ AIRI 的 Volcengine TTS 默认把凭据发往第三方中转 `unspeech.hyp3r.lin
 | Model | `doubao-seed-tts`(以方舟控制台「开通管理」显示的模型 ID 为准,如 `doubao-seed-tts-2.0`) |
 | Voice | 豆包音色 ID,如 `zh_female_cancan_schoolgirl` |
 
-前提:注册火山方舟 + 实名 → 创建 API Key → 在「开通管理」开通 doubao-seed-tts 模型。若测试报 model not found,按控制台显示的 ID 改模型名即可。
+前提:注册火山方舟 + 实名 → **「API Key 管理」创建 API Key**(⚠️ 不是"语音技术应用"的 App ID / Access Token / Secret Key——那套是旧版凭据,给 AIRI 原生火山卡片用的,本链路用不上)→ 在「开通管理」开通 doubao-seed-tts 模型(**音色列表为空/服务未开通时调用会报模型未开通,先开通**)。若测试报 model not found,按控制台显示的 ID 改模型名即可。
 
 ### 方案二(保底):SiliconFlow CosyVoice2
 
