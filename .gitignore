@@ -1,0 +1,26 @@
+# === 密钥与真实配置(只允许样例入库) ===
+config/*.local.*
+config/**/*.local.*
+*.key
+.env
+.env.*
+!config/airi-providers.example.md
+
+# === 实测产生的本地数据(录音/屏幕录制/监控原始数据) ===
+recordings/
+*.wav
+*.mp3
+*.m4a
+*.mov
+*.mp4
+out/
+logs/
+*-raw.csv
+
+# === 工具缓存 ===
+.v2c/
+.video_agent/
+.DS_Store
+
+# === Node/macOS 杂项 ===
+node_modules/
