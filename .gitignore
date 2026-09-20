@@ -16,6 +16,7 @@ recordings/
 out/
 logs/
 *-raw.csv
+/airi-*.csv
 
 # === 工具缓存 ===
 .v2c/
